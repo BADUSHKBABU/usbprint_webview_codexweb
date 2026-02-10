@@ -1,10 +1,4 @@
-//
-//
-//
-// // import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
 // import 'dart:typed_data';
-//
-//
 // import 'package:flutter/material.dart';
 // import 'package:screenshot/screenshot.dart';
 // import 'package:untitled/printservice.dart';
@@ -13,7 +7,6 @@
 // import 'package:printing/printing.dart';
 // import 'package:pdf/pdf.dart';
 // import 'package:image/image.dart' as img;
-//
 //
 // class HtmlPrinterPage extends StatefulWidget {
 //   const HtmlPrinterPage({Key? key}) : super(key: key);
@@ -29,76 +22,244 @@
 //   bool isConvertingPdf = false;
 //   late final WebViewController webViewController;
 //
-//   // Hardcoded HTML content
+//   // Track which HTML is currently displayed
+//   bool showingHtmlContent1 = true;
+//
+//   // HTML Content 1 - Click-based dropdown
 //   final String htmlContent = '''
+//
 // <!DOCTYPE html>
-// <html lang="en">.+
+// <html>
 // <head>
-//     <meta charset="UTF-8" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//     <title>Sample HTML Page</title>
-//     <style>
-//         body {
-//           font-family: Arial, sans-serif;
-//           margin: 40px;
-//           background-color: #f9f9f9;
-//           color: #333;
-//         }
-//         header {
-//           background-color: #007bff;
-//           color: white;
-//           padding: 15px;
-//           border-radius: 8px;
-//           text-align: center;
-//         }
-//         section {
-//           margin-top: 20px;
-//         }
-//         button {
-//           background-color: #007bff;
-//           color: white;
-//           border: none;
-//           padding: 10px 15px;
-//           border-radius: 5px;
-//           cursor: pointer;
-//         }
-//         button:hover {
-//           background-color: #0056b3;
-//         }
-//         .name{
-//             font-size:20px;
-//             }
-//     </style>
+// <meta name="viewport" content="width=device-width, initial-scale=1">
+// <style>
+// body {
+//   font-family: Arial, sans-serif;
+//   padding: 20px;
+//   margin: 0;
+// }
+//
+// /* Button */
+// .dropdown-btn {
+//   background-color: #007bff;
+//   color: white;
+//   padding: 10px 16px;
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 4px;
+//   font-size: 14px;
+//   font-weight: 500;
+// }
+//
+// .dropdown-btn:hover {
+//   background-color: #0056b3;
+// }
+//
+// /* Dropdown container */
+// .dropdown {
+//   position: relative;
+//   display: inline-block;
+// }
+//
+// /* Dropdown content */
+// .dropdown-menu {
+//   display: none;
+//   position: absolute;
+//   background-color: white;
+//   min-width: 160px;
+//   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+//   border-radius: 4px;
+//   z-index: 1000;
+//   margin-top: 5px;
+//   border: 1px solid #ddd;
+// }
+//
+// /* Dropdown items */
+// .dropdown-menu a {
+//   color: #333;
+//   padding: 10px 16px;
+//   text-decoration: none;
+//   display: block;
+//   font-size: 14px;
+// }
+//
+// .dropdown-menu a:first-child {
+//   border-radius: 4px 4px 0 0;
+// }
+//
+// .dropdown-menu a:last-child {
+//   border-radius: 0 0 4px 4px;
+// }
+//
+// .dropdown-menu a:hover {
+//   background-color: #f1f1f1;
+// }
+//
+// .label {
+//   margin-top: 20px;
+//   font-size: 12px;
+//   color: #666;
+// }
+// </style>
 // </head>
+//
 // <body>
-// <header>
-//     <h1>Welcome to My Sample Page</h1>
-// </header>
 //
-// <section>
-//     <h1>About</h1>
-//     <p>This is a simple HTML example with basic styling and structure.</p>
-// </section>
+// <h3>Click-based Dropdown</h3>
 //
-// <section>
-//     <h2>Contact</h2>
-//     <form>
-//         <label for="name">Name:</label><br />
-//         <input type="text" id="name"  name="name" /><br /><br />
+// <div class="dropdown">
+//   <button class="dropdown-btn" id="menuBtn">
+//     Menu ▼
+//   </button>
 //
-//         <label for="email">Email:</label><br />
-//         <input type="email" id="email" name="email" /><br /><br />
+//   <div class="dropdown-menu" id="dropdownMenu">
+//     <a href="#" onclick="alert('Item 1 clicked'); return false;">Item 1</a>
+//     <a href="#" onclick="alert('Item 2 clicked'); return false;">Item 2</a>
+//     <a href="#" onclick="alert('Item 3 clicked'); return false;">Item 3</a>
+//   </div>
+// </div>
 //
-//         <button type="submit">Submit</button>
-//     </form>
-// </section>
+// <p class="label">Click the button to toggle dropdown</p>
 //
-// <footer style="margin-top: 30px; text-align:center;">
-//     <p>&copy; 2025 My Website</p>
-// </footer>
+// <script>
+// document.addEventListener('DOMContentLoaded', function() {
+//   const btn = document.getElementById('menuBtn');
+//   const menu = document.getElementById('dropdownMenu');
+//
+//   if (btn && menu) {
+//     btn.addEventListener('click', function(e) {
+//       e.stopPropagation();
+//       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+//     });
+//
+//     // Close dropdown when clicking outside
+//     document.addEventListener('click', function(event) {
+//       if (!event.target.matches('.dropdown-btn')) {
+//         if (menu.style.display === 'block') {
+//           menu.style.display = 'none';
+//         }
+//       }
+//     });
+//   }
+// });
+// </script>
+//
 // </body>
 // </html>
 //   ''';
+//
+//   // HTML Content 2 - Hover-based dropdown (no JavaScript)
+//   final String htmlContent2 = '''
+// <!DOCTYPE html>
+// <html>
+// <head>
+// <meta name="viewport" content="width=device-width, initial-scale=1">
+// <style>
+// body {
+//   font-family: Arial, sans-serif;
+//   padding: 20px;
+//   margin: 0;
+// }
+//
+// /* Navigation bar */
+// .nav {
+//   list-style-type: none;
+//   margin: 0;
+//   padding: 0;
+//   background-color: #333;
+//   border-radius: 4px;
+//   overflow: hidden;
+// }
+//
+// .nav-item {
+//   float: left;
+//   position: relative;
+// }
+//
+// .nav-link {
+//   display: block;
+//   color: white;
+//   text-align: center;
+//   padding: 14px 20px;
+//   text-decoration: none;
+//   font-size: 14px;
+//   cursor: pointer;
+// }
+//
+// .nav-link:hover {
+//   background-color: #555;
+// }
+//
+// /* Dropdown container */
+// .dropdown-menu {
+//   display: none;
+//   position: absolute;
+//   background-color: white;
+//   min-width: 200px;
+//   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+//   z-index: 1000;
+//   border-radius: 0 0 4px 4px;
+//   border: 1px solid #ddd;
+//   border-top: none;
+// }
+//
+// /* Show dropdown on hover */
+// .nav-item:hover .dropdown-menu {
+//   display: block;
+// }
+//
+// /* Dropdown links */
+// .dropdown-item {
+//   color: #333;
+//   padding: 12px 16px;
+//   text-decoration: none;
+//   display: block;
+//   font-size: 14px;
+// }
+//
+// .dropdown-item:hover {
+//   background-color: #f1f1f1;
+// }
+//
+// .label {
+//   margin-top: 20px;
+//   font-size: 12px;
+//   color: #666;
+// }
+// </style>
+// </head>
+//
+// <body>
+//
+// <h3>Hover-based Dropdown</h3>
+//
+// <ul class="nav">
+//   <li class="nav-item">
+//     <a class="nav-link">Menu ▼</a>
+//     <div class="dropdown-menu">
+//       <a class="dropdown-item" href="#" onclick="alert('Action clicked'); return false;">Action</a>
+//       <a class="dropdown-item" href="#" onclick="alert('Another action clicked'); return false;">Another action</a>
+//       <a class="dropdown-item" href="#" onclick="alert('Something else clicked'); return false;">Something else</a>
+//     </div>
+//   </li>
+//
+//   <li class="nav-item">
+//     <a class="nav-link">Options ▼</a>
+//     <div class="dropdown-menu">
+//       <a class="dropdown-item" href="#" onclick="alert('Option 1 clicked'); return false;">Option 1</a>
+//       <a class="dropdown-item" href="#" onclick="alert('Option 2 clicked'); return false;">Option 2</a>
+//     </div>
+//   </li>
+// </ul>
+//
+// <p class="label">Hover over menu items to see dropdowns</p>
+//
+// </body>
+// </html>
+//   ''';
+//
+//   // Get current HTML based on selection
+//   String get currentHtmlContent => showingHtmlContent1 ? htmlContent : htmlContent2;
 //
 //   @override
 //   void initState() {
@@ -111,7 +272,47 @@
 //   void _initWebView() {
 //     webViewController = WebViewController()
 //       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-//       ..loadHtmlString(htmlContent);
+//       ..loadHtmlString(currentHtmlContent);
+//
+//     // Reload after delay to ensure scripts execute properly on Android 7
+//     Future.delayed(const Duration(milliseconds: 1000), () {
+//       if (mounted) {
+//         webViewController.reload();
+//       }
+//     });
+//   }
+//
+//   // Switch to HTML Content 1
+//   void _loadHtmlContent1() {
+//     setState(() {
+//       showingHtmlContent1 = true;
+//     });
+//     webViewController.loadHtmlString(htmlContent);
+//
+//     // Reload to ensure JavaScript executes
+//     Future.delayed(const Duration(milliseconds: 800), () {
+//       if (mounted) {
+//         webViewController.reload();
+//       }
+//     });
+//
+//     _showSnackBar('Loaded Click-based Dropdown');
+//   }
+//
+//   // Switch to HTML Content 2
+//   void _loadHtmlContent2() {
+//     setState(() {
+//       showingHtmlContent1 = false;
+//     });
+//     webViewController.loadHtmlString(htmlContent2);
+//
+//     Future.delayed(const Duration(milliseconds: 800), () {
+//       if (mounted) {
+//         webViewController.reload();
+//       }
+//     });
+//
+//     _showSnackBar('Loaded Hover-based Dropdown');
 //   }
 //
 //   void _initPrinter() {
@@ -184,7 +385,7 @@
 //     _showSnackBar('Printing...');
 //
 //     bool success = await PrinterService.printHtmlContent(
-//         htmlContent: htmlContent);
+//         htmlContent: currentHtmlContent);
 //
 //     setState(() {
 //       isPrinting = false;
@@ -210,7 +411,7 @@
 //     _showSnackBar('Printing as text...');
 //
 //     bool success = await PrinterService.printHtmlAsText(
-//         htmlContent: htmlContent);
+//         htmlContent: currentHtmlContent);
 //
 //     setState(() {
 //       isPrinting = false;
@@ -240,63 +441,18 @@
 //     });
 //   }
 //
-//   // Convert HTML to PDF
 //   Future<Uint8List> _generatePdfFromHtml() async {
 //     try {
-//       // Convert HTML to PDF bytes (with proper formatting)
 //       final pdfBytes = await Printing.convertHtml(
 //         format: PdfPageFormat.a4,
-//         html: htmlContent,
+//         html: currentHtmlContent,
 //       );
 //       return pdfBytes;
 //     } catch (e) {
-//       // log('Error generating formatted PDF: $e');
 //       rethrow;
 //     }
 //   }
 //
-//   // Future<pw.Document> _generatePdfFromHtml() async {
-//   //   final pdf = pw.Document();
-//   //
-//   //   // Simple text extraction from HTML for PDF
-//   //   // Remove HTML tags for basic text content
-//   //   String textContent = htmlContent
-//   //       .replaceAll(RegExp(r'<[^>]*>'), ' ')
-//   //       .replaceAll(RegExp(r'\s+'), ' ')
-//   //       .trim();
-//   //
-//   //   pdf.addPage(
-//   //     pw.Page(
-//   //       pageFormat: PdfPageFormat.a4,
-//   //       build: (context) => pw.Column(
-//   //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-//   //         children: [
-//   //           pw.Header(
-//   //             level: 0,
-//   //             child: pw.Text(
-//   //               'HTML Content',
-//   //               style: pw.TextStyle(
-//   //                 fontSize: 24,
-//   //                 fontWeight: pw.FontWeight.bold,
-//   //               ),
-//   //             ),
-//   //           ),
-//   //           pw.SizedBox(height: 20),
-//   //           pw.Text(
-//   //             textContent,
-//   //             style: const pw.TextStyle(fontSize: 12),
-//   //           ),
-//   //         ],
-//   //       ),
-//   //     ),
-//   //   );
-//   //
-//   //   return pdf;
-//   // }
-//   //
-//
-//
-//   // View PDF Preview
 //   Future<void> _viewAsPdf() async {
 //     setState(() => isConvertingPdf = true);
 //     try {
@@ -306,15 +462,14 @@
 //       await Navigator.push(
 //         context,
 //         MaterialPageRoute(
-//           builder: (context) =>
-//               Scaffold(
-//                 appBar: AppBar(title: const Text('PDF Preview')),
-//                 body: PdfPreview(
-//                   build: (format) => pdfBytes,
-//                   allowSharing: true,
-//                   allowPrinting: true,
-//                 ),
-//               ),
+//           builder: (context) => Scaffold(
+//             appBar: AppBar(title: const Text('PDF Preview')),
+//             body: PdfPreview(
+//               build: (format) => pdfBytes,
+//               allowSharing: true,
+//               allowPrinting: true,
+//             ),
+//           ),
 //         ),
 //       );
 //     } catch (e) {
@@ -323,100 +478,81 @@
 //     }
 //   }
 //
-//   // Future<void> _viewAsPdf() async {
-//   //   setState(() {
-//   //     isConvertingPdf = true;
-//   //   });
-//   //
-//   //   try {
-//   //     final pdf = await _generatePdfFromHtml();
-//   //
-//   //     setState(() {
-//   //       isConvertingPdf = false;
-//   //     });
-//   //
-//   //     // Show PDF preview in a new screen
-//   //     await Navigator.push(
-//   //       context,
-//   //       MaterialPageRoute(
-//   //         builder: (context) => Scaffold(
-//   //           appBar: AppBar(
-//   //             title: const Text('PDF Preview'),
-//   //             backgroundColor: Colors.blue,
-//   //           ),
-//   //           body: PdfPreview(
-//   //             build: (format) => pdf.save(),
-//   //             allowSharing: true,
-//   //             allowPrinting: true,
-//   //             canChangePageFormat: false,
-//   //           ),
-//   //         ),
-//   //       ),
-//   //     );
-//   //   } catch (e) {
-//   //     setState(() {
-//   //       isConvertingPdf = false;
-//   //     });
-//   //     _showSnackBar('Error generating PDF: $e', isError: true);
-//   //     log('PDF generation error: $e');
-//   //   }
-//   // }
-//   //
-//   //
-//   // Print as PDF (convert HTML to PDF then print via thermal printer)
-//   //
-//   // Future<void> _printAsPdf() async {
-//   //   if (!PrinterService.isPrinterConnected) {
-//   //     _showSnackBar('Please connect to a printer first', isError: true);
-//   //     return;
-//   //   }
-//   //
-//   //   setState(() {
-//   //     isPrinting = true;
-//   //     isConvertingPdf = true;
-//   //   });
-//   //
-//   //   try {
-//   //     _showSnackBar('Converting HTML to PDF...');
-//   //
-//   //     final pdf = await _generatePdfFromHtml();
-//   //     final pdfBytes = await pdf.save();
-//   //
-//   //     setState(() {
-//   //       isConvertingPdf = false;
-//   //     });
-//   //
-//   //     _showSnackBar('Printing PDF...');
-//   //
-//   //     // Here you would need to add a method in PrinterService to handle PDF bytes
-//   //     // For now, we'll use the existing HTML print method
-//   //     // If your PrinterService has a printPdf method, use:
-//   //     // bool success = await PrinterService.printPdf(pdfBytes: pdfBytes);
-//   //
-//   //     bool success = await PrinterService.printHtmlContent(htmlContent: htmlContent);
-//   //
-//   //     setState(() {
-//   //       isPrinting = false;
-//   //     });
-//   //
-//   //     if (success) {
-//   //       _showSnackBar('PDF printed successfully');
-//   //     } else {
-//   //       _showSnackBar('Print failed', isError: true);
-//   //     }
-//   //   } catch (e) {
-//   //     setState(() {
-//   //       isPrinting = false;
-//   //       isConvertingPdf = false;
-//   //     });
-//   //     _showSnackBar('Error: $e', isError: true);
-//   //     log('Print as PDF error: $e');
-//   //   }
-//   // }
-//   //
-//   //
+//   Future<Uint8List?> convertHtmlToUint8List(String htmlContent) async {
+//     try {
+//       final Uint8List? imageBytes = await WebcontentConverter.contentToImage(
+//         content: htmlContent,
+//         duration: 1000,
+//         scale: 2,
+//       );
+//       return imageBytes;
+//     } catch (e) {
+//       print('Error converting HTML to Uint8List: $e');
+//       return null;
+//     }
+//   }
 //
+//   Future<Uint8List> resizeForThermal(Uint8List htmlBytes) async {
+//     final image = img.decodeImage(htmlBytes);
+//     if (image == null) {
+//       throw Exception("Failed to decode HTML image");
+//     }
 //
+//     const int targetWidth = 576;
+//
+//     if (image.width != targetWidth) {
+//       final resized = img.copyResize(
+//         image,
+//         width: targetWidth,
+//         interpolation: img.Interpolation.cubic,
+//       );
+//       return Uint8List.fromList(img.encodePng(resized));
+//     }
+//
+//     return Uint8List.fromList(img.encodePng(image));
+//   }
+//
+//   Future<void> _printAsPdf() async {
+//     if (!PrinterService.isPrinterConnected) {
+//       _showSnackBar('Please connect to a printer first', isError: true);
+//       return;
+//     }
+//
+//     setState(() {
+//       isPrinting = true;
+//       isConvertingPdf = true;
+//     });
+//
+//     try {
+//       _showSnackBar('Converting HTML to image...');
+//
+//       final Uint8List? bytes = await convertHtmlToUint8List(currentHtmlContent);
+//
+//       if (bytes == null) {
+//         throw Exception('Failed to convert HTML to image');
+//       }
+//
+//       _showSnackBar('Resizing for thermal printer...');
+//
+//       final resizedBytes = await resizeForThermal(bytes);
+//
+//       setState(() => isConvertingPdf = false);
+//
+//       _showSnackBar('Sending to printer...');
+//
+//       await PrinterService.printImage(resizedBytes);
+//
+//       setState(() => isPrinting = false);
+//       _showSnackBar('Print completed successfully');
+//     } catch (e) {
+//       setState(() {
+//         isPrinting = false;
+//         isConvertingPdf = false;
+//       });
+//       _showSnackBar('Error: $e', isError: true);
+//       print('Print error: $e');
+//     }
+//   }
 //
 //   void _showSnackBar(String message, {bool isError = false}) {
 //     if (mounted) {
@@ -444,133 +580,6 @@
 //         return Colors.red;
 //     }
 //   }
-//
-//
-//
-//   // Future<Uint8List> htmlToPdfBytes(String htmlContent) async {
-//   //   final pdf = await Printing.convertHtml(
-//   //     format: PdfPageFormat.a4, // or custom page size
-//   //     html: htmlContent,
-//   //   );
-//   //   return pdf;
-//   // }
-//
-//
-//
-//     Future<Uint8List?> convertHtmlToUint8List(String htmlContent) async {
-//       try {
-//         final Uint8List? imageBytes = await WebcontentConverter.
-//         contentToImage(
-//           content:htmlContent,
-//           duration: 500,
-//
-//           scale: 20,
-//         );
-//         return imageBytes;
-//       } catch (e) {
-//         print('Error converting HTML to Uint8List: $e');
-//         return null;
-//       }
-//     }
-//
-//     Future<void> _printAsPdf() async {
-//       try {
-//         // Capture the current WebView as image
-//         final Uint8List? bytes =await convertHtmlToUint8List(htmlContent);
-//         final asd=await resizeForThermal(bytes!);
-//         // await screenshotController.capture();
-//
-//
-//         if (asd == null) {
-//           ScaffoldMessenger.of(context)
-//               .showSnackBar(const SnackBar(content: Text("Failed to capture HTML")));
-//           return;
-//         }
-//
-//         // Send captured image to printer
-//         await PrinterService.printImage(asd);
-//
-//         ScaffoldMessenger.of(context)
-//             .showSnackBar(const SnackBar(content: Text("Printing started...")));
-//       } catch (e) {
-//         print("Error printing: $e");
-//       }
-//
-//     // if (!PrinterService.isPrinterConnected) {
-//     //   _showSnackBar('Please connect to a printer first', isError: true);
-//     //   return;
-//     // }
-//     //
-//     // setState(() {
-//     //   isPrinting = true;
-//     //   isConvertingPdf = true;
-//     // });
-//     //
-//     // try {
-//     //   _showSnackBar('Converting HTML to PDF...');
-//     //   final pdfBytes = await _generatePdfFromHtml();
-//     //
-//     //   setState(() => isConvertingPdf = false);
-//     //   _showSnackBar('Printing PDF...');
-//     //
-//     //   // If your printer supports raw PDF printing:
-//     //   // bool success = await PrinterService.printPdf(pdfBytes: pdfBytes);
-//     //
-//     //   // If not, fallback to image or text printing
-//     //   bool success = await PrinterService.printHtmlContent(htmlContent: htmlContent);
-//     //
-//     //   setState(() => isPrinting = false);
-//     //
-//     //   if (success) {
-//     //     _showSnackBar('PDF printed successfully');
-//     //   } else {
-//     //     _showSnackBar('Print failed', isError: true);
-//     //   }
-//     // } catch (e) {
-//     //   setState(() {
-//     //     isPrinting = false;
-//     //     isConvertingPdf = false;
-//     //   });
-//     //   _showSnackBar('Error: $e', isError: true);
-//     // }
-//
-//
-//   }
-//
-//
-//
-//   Future<Uint8List> _resizeForPrint(Uint8List originalBytes) async {
-//     final decoded = img.decodeImage(originalBytes)!;
-//
-//     // A4 at 300 DPI ≈ 2480x3508 pixels
-//     final resized = img.copyResize(
-//       decoded,
-//       width: 2480,
-//       height: (decoded.height * (2480 / decoded.width)).round(),
-//       interpolation: img.Interpolation.cubic,
-//     );
-//
-//     return Uint8List.fromList(img.encodeJpg(resized, quality: 100));
-//   }
-//   /// Resize HTML image to fit 80mm thermal printer width (576px)
-//   Future<Uint8List> resizeForThermal(Uint8List htmlBytes) async {
-//     // Decode image
-//     final image = img.decodeImage(htmlBytes);
-//     if (image == null) {
-//       throw Exception("Failed to decode HTML image");
-//     }
-//
-//     // Resize to 576px width (common for 80mm printers)
-//     final resized = img.copyResize(
-//       image,
-//       width: 576,
-//       interpolation: img.Interpolation.cubic,
-//     );
-//
-//     // Encode to PNG or BMP depending on printer support
-//     return Uint8List.fromList(img.encodePng(resized));
-//   }
-//
 //
 //   @override
 //   void dispose() {
@@ -684,6 +693,44 @@
 //
 //           const Divider(height: 1),
 //
+//           // HTML Switcher Buttons
+//           Container(
+//             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//             child: Row(
+//               children: [
+//                 Expanded(
+//                   child: ElevatedButton.icon(
+//                     onPressed: showingHtmlContent1 ? null : _loadHtmlContent1,
+//                     icon: const Icon(Icons.touch_app, size: 18),
+//                     label: const Text('Click Dropdown'),
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: showingHtmlContent1
+//                           ? Colors.blue.shade700
+//                           : Colors.blue,
+//                       foregroundColor: Colors.white,
+//                       elevation: showingHtmlContent1 ? 8 : 2,
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: ElevatedButton.icon(
+//                     onPressed: showingHtmlContent1 ? _loadHtmlContent2 : null,
+//                     icon: const Icon(Icons.mouse, size: 18),
+//                     label: const Text('Hover Dropdown'),
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: !showingHtmlContent1
+//                           ? Colors.blue.shade700
+//                           : Colors.blue,
+//                       foregroundColor: Colors.white,
+//                       elevation: !showingHtmlContent1 ? 8 : 2,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//
 //           // HTML Preview with WebView
 //           Expanded(
 //             child: Container(
@@ -701,9 +748,9 @@
 //                     child: Row(
 //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                       children: [
-//                         const Text(
-//                           'HTML Preview:',
-//                           style: TextStyle(
+//                         Text(
+//                           'Preview: ${showingHtmlContent1 ? "Click" : "Hover"} Dropdown',
+//                           style: const TextStyle(
 //                             fontSize: 16,
 //                             fontWeight: FontWeight.bold,
 //                             color: Colors.blue,
@@ -721,7 +768,8 @@
 //                             ),
 //                           )
 //                               : const Icon(Icons.picture_as_pdf, size: 18),
-//                           label: Text(isConvertingPdf ? 'Converting...' : 'View as PDF'),
+//                           label: Text(
+//                               isConvertingPdf ? 'Converting...' : 'View as PDF'),
 //                           style: ElevatedButton.styleFrom(
 //                             backgroundColor: Colors.red,
 //                             foregroundColor: Colors.white,
@@ -737,8 +785,10 @@
 //                   Expanded(
 //                     child: ClipRRect(
 //                       borderRadius: BorderRadius.circular(8),
-//                       child: Screenshot(controller: screenshotController,
-//                       child: WebViewWidget(controller: webViewController)),
+//                       child: Screenshot(
+//                         controller: screenshotController,
+//                         child: WebViewWidget(controller: webViewController),
+//                       ),
 //                     ),
 //                   ),
 //                 ],
@@ -766,7 +816,8 @@
 //                   children: [
 //                     Expanded(
 //                       child: ElevatedButton.icon(
-//                         onPressed: PrinterService.isPrinterConnected && !isPrinting
+//                         onPressed:
+//                         PrinterService.isPrinterConnected && !isPrinting
 //                             ? _printHtml
 //                             : null,
 //                         icon: isPrinting
@@ -790,7 +841,8 @@
 //                     const SizedBox(width: 12),
 //                     Expanded(
 //                       child: ElevatedButton.icon(
-//                         onPressed: PrinterService.isPrinterConnected && !isPrinting
+//                         onPressed:
+//                         PrinterService.isPrinterConnected && !isPrinting
 //                             ? _printAsText
 //                             : null,
 //                         icon: const Icon(Icons.text_fields),
@@ -808,7 +860,9 @@
 //                 SizedBox(
 //                   width: double.infinity,
 //                   child: ElevatedButton.icon(
-//                     onPressed: PrinterService.isPrinterConnected && !isPrinting && !isConvertingPdf
+//                     onPressed: PrinterService.isPrinterConnected &&
+//                         !isPrinting &&
+//                         !isConvertingPdf
 //                         ? _printAsPdf
 //                         : null,
 //                     icon: (isPrinting || isConvertingPdf)
@@ -820,16 +874,16 @@
 //                         color: Colors.white,
 //                       ),
 //                     )
-//                         : const Icon(Icons.picture_as_pdf),
+//                         : const Icon(Icons.image),
 //                     label: Text(
 //                       isConvertingPdf
-//                           ? 'Converting to PDF...'
+//                           ? 'Converting...'
 //                           : isPrinting
-//                           ? 'Printing PDF...'
-//                           : 'Print as PDF',
+//                           ? 'Printing...'
+//                           : 'Print as Image',
 //                     ),
 //                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Colors.red,
+//                       backgroundColor: Colors.deepPurple,
 //                       foregroundColor: Colors.white,
 //                       padding: const EdgeInsets.symmetric(vertical: 16),
 //                     ),
@@ -869,108 +923,245 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
   bool isConvertingPdf = false;
   late final WebViewController webViewController;
 
-  // Hardcoded HTML content - optimized for thermal printing
+  // Track which HTML is currently displayed
+  bool showingHtmlContent1 = true;
+
+  // HTML Content 1 - Click-based dropdown
   final String htmlContent = '''
   
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=576, initial-scale=1.0" />
-    <title>Sample HTML Page</title>
-    <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-          padding: 0;
-          background-color: #ffffff;
-          color: #000000;
-          width: 536px;
-          font-size: 18px;
-        }
-        header {
-          background-color: #007bff;
-          color: white;
-          padding: 15px;
-          border-radius: 8px;
-          text-align: center;
-          margin-bottom: 15px;
-        }
-        h1 {
-          font-size: 28px;
-          margin: 10px 0;
-        }
-        h2 {
-          font-size: 24px;
-          margin: 10px 0;
-        }
-        section {
-          margin-top: 15px;
-          margin-bottom: 15px;
-        }
-        p {
-          font-size: 18px;
-          line-height: 1.5;
-          margin: 8px 0;
-        }
-        label {
-          font-size: 18px;
-          font-weight: bold;
-        }
-        input {
-          font-size: 16px;
-          padding: 8px;
-          width: 100%;
-          margin: 5px 0;
-          box-sizing: border-box;
-        }
-        button {
-          background-color: #007bff;
-          color: white;
-          border: none;
-          padding: 12px 20px;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 18px;
-          margin-top: 10px;
-        }
-        footer {
-          margin-top: 20px;
-          text-align: center;
-          font-size: 16px;
-        }
-    </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0;
+}
+
+/* Button */
+.dropdown-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  z-index: 1000;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Dropdown items */
+.dropdown-menu a {
+  color: #333;
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-menu a:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.dropdown-menu a:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f1f1f1;
+}
+
+.label {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
+}
+</style>
 </head>
+
 <body>
-<header>
-    <h1>Welcome to My Sample Page</h1>
-</header>
 
-<section>
-    <h2>About</h2>
-    <p>This is a simple HTML example with basic styling and structure optimized for thermal printing.</p>
-</section>
+<h3>Click-based Dropdown</h3>
 
-<section>
-    <h2>Contact</h2>
-    <form>
-        <label for="name">Name:</label><br />
-        <input type="text" id="name" name="name" value="John Doe" /><br />
-        
-        <label for="email">Email:</label><br />
-        <input type="email" id="email" name="email" value="john@example.com" /><br />
-        
-        <button type="button">Submit</button>
-    </form>
-</section>
+<div class="dropdown">
+  <button class="dropdown-btn" id="menuBtn">
+    Menu ▼
+  </button>
 
-<footer>
-    <p>&copy; 2025 My Website</p>
-</footer>
+  <div class="dropdown-menu" id="dropdownMenu">
+    <a href="#" onclick="alert('Item 1 clicked'); return false;">Item 1</a>
+    <a href="#" onclick="alert('Item 2 clicked'); return false;">Item 2</a>
+    <a href="#" onclick="alert('Item 3 clicked'); return false;">Item 3</a>
+  </div>
+</div>
+
+<p class="label">Click the button to toggle dropdown</p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('dropdownMenu');
+  
+  if (btn && menu) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!event.target.matches('.dropdown-btn')) {
+        if (menu.style.display === 'block') {
+          menu.style.display = 'none';
+        }
+      }
+    });
+  }
+});
+</script>
+
 </body>
 </html>
   ''';
 
+  // HTML Content 2 - Hover-based dropdown (no JavaScript)
+  final String htmlContent2 = '''
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  margin: 0;
+}
+
+/* Navigation bar */
+.nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nav-item {
+  float: left;
+  position: relative;
+}
+
+.nav-link {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background-color: #555;
+}
+
+/* Dropdown container */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+/* Show dropdown on hover */
+.nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+/* Dropdown links */
+.dropdown-item {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+.label {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<h3>Hover-based Dropdown</h3>
+
+<ul class="nav">
+  <li class="nav-item">
+    <a class="nav-link">Menu ▼</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#" onclick="alert('Action clicked'); return false;">Action</a>
+      <a class="dropdown-item" href="#" onclick="alert('Another action clicked'); return false;">Another action</a>
+      <a class="dropdown-item" href="#" onclick="alert('Something else clicked'); return false;">Something else</a>
+    </div>
+  </li>
+  
+  <li class="nav-item">
+    <a class="nav-link">Options ▼</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#" onclick="alert('Option 1 clicked'); return false;">Option 1</a>
+      <a class="dropdown-item" href="#" onclick="alert('Option 2 clicked'); return false;">Option 2</a>
+    </div>
+  </li>
+</ul>
+
+<p class="label">Hover over menu items to see dropdowns</p>
+
+</body>
+</html>
+  ''';
+
+  // Get current HTML based on selection
+  String get currentHtmlContent => showingHtmlContent1 ? htmlContent : htmlContent2;
 
   @override
   void initState() {
@@ -983,7 +1174,47 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
   void _initWebView() {
     webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadHtmlString(htmlContent);
+      ..loadHtmlString(currentHtmlContent);
+
+    // Reload after delay to ensure scripts execute properly on Android 7
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) {
+        webViewController.reload();
+      }
+    });
+  }
+
+  // Switch to HTML Content 1
+  void _loadHtmlContent1() {
+    setState(() {
+      showingHtmlContent1 = true;
+    });
+    webViewController.loadHtmlString(htmlContent);
+
+    // Reload to ensure JavaScript executes
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) {
+        webViewController.reload();
+      }
+    });
+
+    _showSnackBar('Loaded Click-based Dropdown');
+  }
+
+  // Switch to HTML Content 2
+  void _loadHtmlContent2() {
+    setState(() {
+      showingHtmlContent1 = false;
+    });
+    webViewController.loadHtmlString(htmlContent2);
+
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) {
+        webViewController.reload();
+      }
+    });
+
+    _showSnackBar('Loaded Hover-based Dropdown');
   }
 
   void _initPrinter() {
@@ -1056,7 +1287,7 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     _showSnackBar('Printing...');
 
     bool success = await PrinterService.printHtmlContent(
-        htmlContent: htmlContent);
+        htmlContent: currentHtmlContent);
 
     setState(() {
       isPrinting = false;
@@ -1082,7 +1313,7 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     _showSnackBar('Printing as text...');
 
     bool success = await PrinterService.printHtmlAsText(
-        htmlContent: htmlContent);
+        htmlContent: currentHtmlContent);
 
     setState(() {
       isPrinting = false;
@@ -1112,12 +1343,11 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     });
   }
 
-  // Convert HTML to PDF
   Future<Uint8List> _generatePdfFromHtml() async {
     try {
       final pdfBytes = await Printing.convertHtml(
         format: PdfPageFormat.a4,
-        html: htmlContent,
+        html: currentHtmlContent,
       );
       return pdfBytes;
     } catch (e) {
@@ -1125,7 +1355,6 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     }
   }
 
-  // View PDF Preview
   Future<void> _viewAsPdf() async {
     setState(() => isConvertingPdf = true);
     try {
@@ -1151,15 +1380,12 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     }
   }
 
-  /// Convert HTML to image with proper sizing for thermal printer
   Future<Uint8List?> convertHtmlToUint8List(String htmlContent) async {
     try {
-      // CRITICAL: Increase scale factor to render larger image
-      // Then we'll resize to 576px width
       final Uint8List? imageBytes = await WebcontentConverter.contentToImage(
         content: htmlContent,
-        duration: 1000, // Give more time for rendering
-        scale: 2, // Increased scale for better quality
+        duration: 1000,
+        scale: 2,
       );
       return imageBytes;
     } catch (e) {
@@ -1168,18 +1394,14 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     }
   }
 
-
-  /// Resize image to 576px width for 80mm thermal printer
   Future<Uint8List> resizeForThermal(Uint8List htmlBytes) async {
     final image = img.decodeImage(htmlBytes);
     if (image == null) {
       throw Exception("Failed to decode HTML image");
     }
 
-    // Target width for 80mm thermal printer (203 DPI)
     const int targetWidth = 576;
 
-    // Only resize if image is not already at target width
     if (image.width != targetWidth) {
       final resized = img.copyResize(
         image,
@@ -1192,7 +1414,6 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     return Uint8List.fromList(img.encodePng(image));
   }
 
-  /// Print HTML as image to thermal printer
   Future<void> _printAsPdf() async {
     if (!PrinterService.isPrinterConnected) {
       _showSnackBar('Please connect to a printer first', isError: true);
@@ -1207,8 +1428,7 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
     try {
       _showSnackBar('Converting HTML to image...');
 
-      // Convert HTML to image
-      final Uint8List? bytes = await convertHtmlToUint8List(htmlContent);
+      final Uint8List? bytes = await convertHtmlToUint8List(currentHtmlContent);
 
       if (bytes == null) {
         throw Exception('Failed to convert HTML to image');
@@ -1216,14 +1436,12 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
 
       _showSnackBar('Resizing for thermal printer...');
 
-      // Resize for thermal printer
       final resizedBytes = await resizeForThermal(bytes);
 
       setState(() => isConvertingPdf = false);
 
       _showSnackBar('Sending to printer...');
 
-      // Print the image
       await PrinterService.printImage(resizedBytes);
 
       setState(() => isPrinting = false);
@@ -1237,7 +1455,6 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
       print('Print error: $e');
     }
   }
-
 
   void _showSnackBar(String message, {bool isError = false}) {
     if (mounted) {
@@ -1378,6 +1595,44 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
 
           const Divider(height: 1),
 
+          // HTML Switcher Buttons
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: showingHtmlContent1 ? null : _loadHtmlContent1,
+                    icon: const Icon(Icons.touch_app, size: 18),
+                    label: const Text('Click Dropdown'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: showingHtmlContent1
+                          ? Colors.blue.shade700
+                          : Colors.blue,
+                      foregroundColor: Colors.white,
+                      elevation: showingHtmlContent1 ? 8 : 2,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: showingHtmlContent1 ? _loadHtmlContent2 : null,
+                    icon: const Icon(Icons.mouse, size: 18),
+                    label: const Text('Hover Dropdown'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: !showingHtmlContent1
+                          ? Colors.blue.shade700
+                          : Colors.blue,
+                      foregroundColor: Colors.white,
+                      elevation: !showingHtmlContent1 ? 8 : 2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // HTML Preview with WebView
           Expanded(
             child: Container(
@@ -1395,9 +1650,9 @@ class _HtmlPrinterPageState extends State<HtmlPrinterPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'HTML Preview:',
-                          style: TextStyle(
+                        Text(
+                          'Preview: ${showingHtmlContent1 ? "Click" : "Hover"} Dropdown',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,

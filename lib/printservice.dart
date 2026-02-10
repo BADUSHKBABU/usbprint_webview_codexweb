@@ -1069,7 +1069,7 @@ class PrinterService {
 
       try {
         printerName = '';
-        _printer = await _completer!.future.timeout(const Duration(seconds: 5))
+        _printer = await _completer!.future.timeout(const Duration(seconds: 1))
             .whenComplete(() {
           log('[printer_service] scanning timer done');
           _isScanning = false;
@@ -1100,7 +1100,7 @@ class PrinterService {
                 vendorId: _printer!.vendorId
             )
         )
-            .timeout(const Duration(seconds: 5))
+            .timeout(const Duration(seconds: 1))
             .whenComplete(() => log('connecting done'));
 
       } on TimeoutException catch (e) {
@@ -1118,7 +1118,7 @@ class PrinterService {
 
       try {
         await _printerManager.disconnect(type: PrinterType.usb,)
-            .timeout(const Duration(seconds: 5))
+            .timeout(const Duration(seconds: 1))
             .whenComplete(() {
           log('[printer_service] disconnect task done');
           _currentUsbStatus = USBStatus.none;
@@ -1155,7 +1155,7 @@ class PrinterService {
     try {
       isPrintOk = await _printerManager
           .send(type: PrinterType.usb, bytes: data)
-          .timeout(const Duration(seconds: 10))
+          // .timeout(const Duration(milliseconds: 200))
           .whenComplete(() {
         _isPrinting = false;
         _refreshPrinterStatus();
@@ -1582,18 +1582,16 @@ class PrinterService {
     }
   }
   static Future<void> printImage(Uint8List imageData) async {
-    if (!isPrinterConnected) {
-      log('[printer_service] Printer not connected');
-      return;
-    }
+    // if (!isPrinterConnected) {
+    //   log('[printer_service] Printer not connected');
+    //   return;
+    // }
 
     _isPrinting = true;
     _refreshPrinterStatus();
 
     try {
-
       final List<int> bytes = List<int>.empty(growable: true);
-
       final generator = Generator(PaperSize.mm58, await CapabilityProfile.load());
 
       final decodedImage = img.decodeImage(imageData);
@@ -1604,24 +1602,74 @@ class PrinterService {
         return;
       }
 
-      // Optional scaling for proper width on POS80
-      final resized = img.copyResize(decodedImage, width: 576);
+      // ✅ Skip resizing if already correct width
+      final int targetWidth = 576;
+      final finalImage = (decodedImage.width == targetWidth)
+          ? decodedImage
+          : img.copyResize(decodedImage, width: targetWidth, interpolation: img.Interpolation.linear);
 
-      // ✅ Ensure we use `List<int>.from` to make it growable
-      bytes.addAll(List<int>.from(generator.imageRaster(resized, align: PosAlign.center)));
-      bytes.addAll(List<int>.from(generator.feed(2)));
-      bytes.addAll(List<int>.from(generator.cut()));
+      bytes.addAll(generator.imageRaster(finalImage, align: PosAlign.center));
+      bytes.addAll(generator.feed(1));  // ✅ Reduce feed from 2 to 1
+      bytes.addAll(generator.cut());
 
-      await _print(data: bytes);
-    } catch (e, st) {
-      log('[printer_service] Error printing image: $e');
-      log('[printer_service] Stack: $st');
+      // ✅ Reduce timeout if your printer responds faster
+      await _printerManager
+          .send(type: PrinterType.usb, bytes: bytes);
+          // .timeout(const Duration(seconds: 5));  // Reduced from 10 to 5
+
+      log('[printer_service] Print completed successfully');
+    } catch (e) {
+      log('[printer_service] Print error: $e');
     } finally {
       _isPrinting = false;
       _refreshPrinterStatus();
     }
   }
-
+  // static Future<void> printImage(Uint8List imageData) async {
+  //   print("inside image print 1");
+  //   if (!isPrinterConnected) {
+  //     log('[printer_service] Printer not connected');
+  //     return;
+  //   }
+  //
+  //   _isPrinting = true;
+  //   _refreshPrinterStatus();
+  //
+  //   try {
+  //     print("inside image print 2");
+  //
+  //     final List<int> bytes = List<int>.empty(growable: true);
+  //
+  //     final generator = Generator(PaperSize.mm58, await CapabilityProfile.load());
+  //
+  //     final decodedImage = img.decodeImage(imageData);
+  //     if (decodedImage == null) {
+  //       log('[printer_service] Failed to decode image');
+  //       print("inside image print failed to load");
+  //       _isPrinting = false;
+  //       _refreshPrinterStatus();
+  //       return;
+  //     }
+  //
+  //     // Optional scaling for proper width on POS80
+  //     final resized = img.copyResize(decodedImage, width: 576);
+  //
+  //     // ✅ Ensure we use `List<int>.from` to make it growable
+  //     bytes.addAll(List<int>.from(generator.imageRaster(resized, align: PosAlign.center)));
+  //     bytes.addAll(List<int>.from(generator.feed(2)));
+  //     bytes.addAll(List<int>.from(generator.cut()));
+  //
+  //     await _print(data: bytes);
+  //   } catch (e, st) {
+  //     log('[printer_service] Error printing image: $e');
+  //     print("inside image print error");
+  //     log('[printer_service] Stack: $st');
+  //   } finally {
+  //     _isPrinting = false;
+  //     _refreshPrinterStatus();
+  //   }
+  // }
+  //
 
 
 
